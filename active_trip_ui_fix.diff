@@ -1,0 +1,196 @@
+--- /tmp/active_trip_screen.dart.orig	2026-09-17 06:56:03.344499750 +0000
++++ "/tmp/ambulance_first/ambulance first/lib/roles/customer/screens/active_trip_screen.dart"	2026-09-17 06:56:21.473570902 +0000
+@@ -94,7 +94,7 @@
+                       animation: _progress,
+                       builder: (context, _) => AeroMedMapPreview(
+                         progress: _progress.value,
+-                        height: 340,
++                        height: 300,
+                         borderRadius: BorderRadius.circular(AppRadius.card),
+                       ),
+                     ),
+@@ -183,56 +183,76 @@
+                             const SizedBox(height: 10),
+                             LayoutBuilder(
+                               builder: (context, constraints) {
+-                                final compact = constraints.maxWidth < 300;
+-                                final eta = Column(
++                                // Phone layouts are intentionally stacked. The old implementation
++                                // placed an unconstrained ETA column beside a fixed 180px route column,
++                                // which overflowed narrow screens and produced Flutter's yellow/black
++                                // debug overflow marker.
++                                final compact = constraints.maxWidth < 390;
++
++                                Widget etaContent() => Column(
++                                      crossAxisAlignment: CrossAxisAlignment.start,
++                                      children: [
++                                        Text(
++                                          awaitingAssignment ? 'DISPATCH' : '${booking.etaMinutes} MIN',
++                                          maxLines: 1,
++                                          overflow: TextOverflow.ellipsis,
++                                          style: AppTextStyles.displaySmall.copyWith(
++                                            fontWeight: FontWeight.w900,
++                                            letterSpacing: -0.5,
++                                          ),
++                                        ),
++                                        Text(
++                                          awaitingAssignment
++                                              ? 'Your quotation was accepted'
++                                              : 'Estimated arrival at pickup point',
++                                          maxLines: 2,
++                                          overflow: TextOverflow.ellipsis,
++                                          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
++                                        ),
++                                      ],
++                                    );
++
++                                Widget routeContent() => Column(
++                                      crossAxisAlignment: CrossAxisAlignment.end,
++                                      children: [
++                                        Text(
++                                          '${booking.distanceKm.toStringAsFixed(1)} km',
++                                          maxLines: 1,
++                                          overflow: TextOverflow.ellipsis,
++                                          textAlign: TextAlign.right,
++                                          style: AppTextStyles.routeIndicator.copyWith(color: AppColors.primary),
++                                        ),
++                                        Text(
++                                          awaitingAssignment
++                                              ? 'Assignment will appear here'
++                                              : 'Live GPS • ${booking.tripMilestone}',
++                                          maxLines: 2,
++                                          overflow: TextOverflow.ellipsis,
++                                          textAlign: TextAlign.right,
++                                          style: AppTextStyles.labelSmall.copyWith(color: AppColors.secondary),
++                                        ),
++                                      ],
++                                    );
++
++                                if (compact) {
++                                  return Column(
++                                    crossAxisAlignment: CrossAxisAlignment.stretch,
++                                    children: [
++                                      etaContent(),
++                                      const SizedBox(height: 6),
++                                      routeContent(),
++                                    ],
++                                  );
++                                }
++
++                                return Row(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+-                                    Text(
+-                                      awaitingAssignment ? 'DISPATCH' : '${booking.etaMinutes} MIN',
+-                                      style: AppTextStyles.displaySmall.copyWith(
+-                                        fontWeight: FontWeight.w900,
+-                                        letterSpacing: -0.5,
+-                                      ),
+-                                    ),
+-                                    Text(
+-                                      awaitingAssignment
+-                                          ? 'Your quotation was accepted'
+-                                          : 'Estimated arrival at pickup point',
+-                                      style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+-                                    ),
+-                                  ],
+-                                );
+-                                final route = Column(
+-                                  crossAxisAlignment: compact ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+-                                  children: [
+-                                    Text(
+-                                      '${booking.distanceKm.toStringAsFixed(1)} km',
+-                                      style: AppTextStyles.routeIndicator.copyWith(color: AppColors.primary),
+-                                    ),
+-                                    SizedBox(
+-                                      width: compact ? constraints.maxWidth : 180,
+-                                      child: Text(
+-                                        awaitingAssignment
+-                                            ? 'Assignment will appear here'
+-                                            : 'Live GPS • ${booking.tripMilestone}',
+-                                        maxLines: 2,
+-                                        overflow: TextOverflow.ellipsis,
+-                                        textAlign: compact ? TextAlign.left : TextAlign.right,
+-                                        style: AppTextStyles.labelSmall.copyWith(color: AppColors.secondary),
+-                                      ),
+-                                    ),
++                                    Expanded(flex: 5, child: etaContent()),
++                                    const SizedBox(width: 12),
++                                    Expanded(flex: 4, child: routeContent()),
+                                   ],
+                                 );
+-                                return compact
+-                                    ? Column(
+-                                        crossAxisAlignment: CrossAxisAlignment.start,
+-                                        children: [eta, const SizedBox(height: 8), route],
+-                                      )
+-                                    : Row(
+-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                                        crossAxisAlignment: CrossAxisAlignment.start,
+-                                        children: [eta, route],
+-                                      );
+                               },
+                             ),
+                           ],
+@@ -244,7 +264,7 @@
+               ),
+             ),
+           ),
+-          const SizedBox(height: 18),
++          const SizedBox(height: 14),
+ 
+           // 2. Rapid Hospital Red Alert Hotline
+           FadeSlideIn(
+@@ -263,7 +283,7 @@
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+-                        Text('Hospital Alert Active', style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700, color: Colors.white)),
++                        Text('Hospital Alert Active', style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700, color: AppColors.onErrorContainer)),
+                         Text('Emergency room trauma team notified', style: AppTextStyles.bodySmall.copyWith(color: AppColors.onErrorContainer)),
+                       ],
+                     ),
+@@ -295,7 +315,7 @@
+               ),
+             ),
+           ),
+-          const SizedBox(height: 18),
++          const SizedBox(height: 14),
+ 
+           // 3. Tactical Boarding Pass Card (Lead Paramedic & Crew)
+           FadeSlideIn(
+@@ -303,7 +323,7 @@
+             child: AeroMedTicketCard(
+               notchColor: AppColors.surface,
+               topChild: Padding(
+-                padding: const EdgeInsets.all(20),
++                padding: const EdgeInsets.all(18),
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+@@ -505,7 +525,7 @@
+               ),
+             ),
+           ),
+-          const SizedBox(height: 20),
++          const SizedBox(height: 16),
+ 
+           if (widget.booking.vitals.isNotEmpty) ...[
+             FadeSlideIn(
+@@ -543,14 +563,14 @@
+                 ]),
+               ),
+             ),
+-            const SizedBox(height: 18),
++            const SizedBox(height: 16),
+           ],
+ 
+           // 4. Live Step Journey Tracker (Dark Forest Ground Deck)
+           FadeSlideIn(
+             delay: const Duration(milliseconds: 130),
+             child: Container(
+-              padding: const EdgeInsets.all(22),
++              padding: const EdgeInsets.all(18),
+               decoration: BoxDecoration(
+                 color: AppColors.surfaceContainerLow,
+                 borderRadius: BorderRadius.circular(AppRadius.card),

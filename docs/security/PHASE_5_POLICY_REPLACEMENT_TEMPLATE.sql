@@ -1,0 +1,46 @@
+-- PHASE 5 POLICY REPLACEMENT TEMPLATE
+-- DO NOT RUN THIS FILE AS-IS.
+--
+-- Reason: the exact current policies, foreign keys, and write paths must be
+-- verified before permissive *_open policies are removed. PostgreSQL combines
+-- permissive policies with OR semantics, so simply adding a restrictive-looking
+-- policy does not secure a table while an existing permissive ALL policy remains.
+--
+-- Apply the safe role helper script first:
+--   PHASE_5_ROLE_HELPERS.sql
+--
+-- Then capture the exact current policy output with:
+--   docs/PHASE_5_COMPATIBILITY_AUDIT.sql
+--
+-- The eventual replacement should follow this pattern:
+--
+-- 1. Begin transaction.
+-- 2. Create replacement policies for the verified access matrix.
+-- 3. Remove only the obsolete permissive policies that were explicitly audited.
+-- 4. Verify customer ownership predicates and operational role predicates.
+-- 5. Verify website writes.
+-- 6. Commit only after validation.
+--
+-- Example shape for an ADMIN-only operation (DO NOT APPLY WITHOUT AUDIT):
+--
+-- create policy admin_read_ambulances
+-- on public.ambulances
+-- for select
+-- to authenticated
+-- using (public.is_admin());
+--
+-- create policy admin_write_ambulances
+-- on public.ambulances
+-- for insert
+-- to authenticated
+-- with check (public.is_admin());
+--
+-- create policy admin_update_ambulances
+-- on public.ambulances
+-- for update
+-- to authenticated
+-- using (public.is_admin())
+-- with check (public.is_admin());
+--
+-- Historical audit logs should NOT receive a broad client INSERT/UPDATE/DELETE
+-- policy. Prefer a trusted server-side audit operation.
