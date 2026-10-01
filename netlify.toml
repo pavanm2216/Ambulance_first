@@ -1,6 +1,6 @@
 [build]
   publish = "build/web"
-  command = "flutter build web --release --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY"
+  command = "git clone https://github.com/flutter/flutter.git --depth 1 -b stable $HOME/flutter && export PATH=$PATH:$HOME/flutter/bin && flutter doctor && flutter build web --release --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY"
 
 [[redirects]]
   from = "/*"
