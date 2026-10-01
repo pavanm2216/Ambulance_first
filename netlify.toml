@@ -1,6 +1,7 @@
 [build]
   publish = "build/web"
   command = "bash build.sh"
+  environment = { SECRETS_SCAN_OMIT_PATHS = "build/web" }
 
 [[redirects]]
   from = "/*"
