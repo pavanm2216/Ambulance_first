@@ -63,10 +63,6 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
-  # Public Supabase client configuration. Never place a service-role/secret key here.
-  assets:
-    - .env
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
