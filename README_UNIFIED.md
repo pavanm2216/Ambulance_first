@@ -74,7 +74,7 @@ This version is wired to the existing Ambulance First Supabase project.
 The project URL is configured as:
 
 ```text
-https://weyftbzqfmusimqznbwr.supabase.co
+https://your-project-ref.supabase.co
 ```
 
 The public anon/publishable key is intentionally **not committed to source code**.

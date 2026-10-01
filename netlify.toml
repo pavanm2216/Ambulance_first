@@ -1,7 +1,7 @@
 [build]
   publish = "build/web"
   command = "bash build.sh"
-  environment = { SECRETS_SCAN_OMIT_PATHS = "build/web" }
+  environment = { SECRETS_SCAN_OMIT_KEYS = "SUPABASE_PUBLISHABLE_KEY,SUPABASE_URL" }
 
 [[redirects]]
   from = "/*"

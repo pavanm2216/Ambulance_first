@@ -11,7 +11,8 @@ import 'package:flutter/services.dart';
 class SupabaseConfig {
   SupabaseConfig._();
 
-  static const String url = 'https://weyftbzqfmusimqznbwr.supabase.co';
+  static const String url =
+      String.fromEnvironment('SUPABASE_URL', defaultValue: '');
 
   // SUPABASE_PUBLISHABLE_KEY is the current client-side key name.
   // SUPABASE_ANON_KEY remains supported for backwards compatibility with

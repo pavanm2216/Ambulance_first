@@ -5,7 +5,7 @@ The project-root `.env` is loaded by `SupabaseConfig` at startup and is already 
 Set:
 
 ```env
-SUPABASE_URL=https://weyftbzqfmusimqznbwr.supabase.co
+SUPABASE_URL=https://your-project-ref.supabase.co
 SUPABASE_ANON_KEY=<YOUR_PUBLIC_ANON_OR_PUBLISHABLE_KEY>
 ```
 

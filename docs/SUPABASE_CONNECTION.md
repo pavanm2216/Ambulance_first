@@ -4,7 +4,7 @@
 
 The Flutter application is configured for the existing Ambulance First Supabase project:
 
-`https://weyftbzqfmusimqznbwr.supabase.co`
+`https://your-project-ref.supabase.co`
 
 The public anon/publishable key can be loaded from the bundled local `.env` file for development, or supplied at runtime with `--dart-define`. The service-role/secret key must never be stored in the Flutter app.
 
